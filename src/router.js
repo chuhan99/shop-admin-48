@@ -1,23 +1,29 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import Home from './views/Home.vue'
+import Login from './components/Login.vue'
+import Index from './components/Index.vue'
 
 Vue.use(Router)
 
+// 命名路由: 给路由起了一个名字
+// 只要起了名字, 也可以通过名字的方式, 切换路由
+// this.$router.push(路径)
+// this.$router.push({ name: 路由的名字 })
 export default new Router({
   routes: [
     {
       path: '/',
-      name: 'home',
-      component: Home
+      redirect: '/index'
     },
     {
-      path: '/about',
-      name: 'about',
-      // route level code-splitting
-      // this generates a separate chunk (about.[hash].js) for this route
-      // which is lazy-loaded when the route is visited.
-      component: () => import(/* webpackChunkName: "about" */ './views/About.vue')
+      path: '/index',
+      name: 'index',
+      component: Index
+    },
+    {
+      path: '/login',
+      name: 'login',
+      component: Login
     }
   ]
 })
