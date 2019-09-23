@@ -4,12 +4,7 @@ import Login from './components/Login.vue'
 import Index from './components/Index.vue'
 
 Vue.use(Router)
-
-// 命名路由: 给路由起了一个名字
-// 只要起了名字, 也可以通过名字的方式, 切换路由
-// this.$router.push(路径)
-// this.$router.push({ name: 路由的名字 })
-export default new Router({
+const router = new Router({
   routes: [
     {
       path: '/',
@@ -19,6 +14,11 @@ export default new Router({
       path: '/index',
       name: 'index',
       component: Index
+      // children: [
+      //   { path: '/users', name: 'users', component: Users },
+      //   { path: '/roles', name: 'roles', component: Roles },
+      //   { path: '/rights', name: 'rights', component: Rights }
+      // ]
     },
     {
       path: '/login',
@@ -27,3 +27,13 @@ export default new Router({
     }
   ]
 })
+router.beforeEach((to, from, next) => {
+  const token = localStorage.getItem('token')
+  if (token || to.path === '/login') {
+    next()
+  } else {
+    next('/login')
+  }
+})
+
+export default router
