@@ -1,19 +1,19 @@
 <template>
   <div class="login">
-
     <el-form ref="form" status-icon :rules="rules" :model="form" label-width="80px">
-      <img src="../assets/avatar.jpg" class="logo">
-      <el-form-item label="用户名" label-width='80px' prop="username">
+      <img src="../assets/avatar.jpg" class="logo" />
+      <el-form-item label="用户名" label-width="80px" prop="username">
         <el-input placeholder="请输入用户名" v-model="form.username"></el-input>
       </el-form-item>
       <el-form-item label="密码" prop="password">
-        <el-input placeholder="请输入密码" type="password"  v-model="form.password"></el-input>
+        <el-input placeholder="请输入密码" type="password" v-model="form.password"></el-input>
       </el-form-item>
       <el-form-item>
         <el-button @click="login" class="loginBtn" type="primary">登录</el-button>
         <el-button @click="reset">重置</el-button>
       </el-form-item>
     </el-form>
+
   </div>
 </template>
 
@@ -27,14 +27,33 @@ export default {
         username: '',
         password: ''
       },
+
       rules: {
         username: [
-          { required: true, message: '请输入用户名', trigger: ['blur', 'change'] },
-          { min: 3, max: 12, message: '用户名必须是3-12位', trigger: ['blur', 'change'] }
+          {
+            required: true,
+            message: '请输入用户名',
+            trigger: ['blur', 'change']
+          },
+          {
+            min: 3,
+            max: 12,
+            message: '用户名必须是3-12位',
+            trigger: ['blur', 'change']
+          }
         ],
         password: [
-          { required: true, message: '请输入密码', trigger: ['blur', 'change'] },
-          { min: 3, max: 12, message: '密码必须是3-12位', trigger: ['blur', 'change'] }
+          {
+            required: true,
+            message: '请输入密码',
+            trigger: ['blur', 'change']
+          },
+          {
+            min: 3,
+            max: 12,
+            message: '密码必须是3-12位',
+            trigger: ['blur', 'change']
+          }
         ]
       }
     }
@@ -68,7 +87,6 @@ export default {
     }
   }
 }
-
 </script>
 
 <style lang="scss" scoped>

@@ -30,7 +30,7 @@
             @click="DeleteRole(row.id)"
             icon="el-icon-delete"
           ></el-button>
-          <el-button size="small" plain type="success" icon="el-icon-check">分配角色</el-button>
+          <el-button @click="assignRoles(row)" size="small" plain type="success" icon="el-icon-check">分配角色</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -49,6 +49,30 @@
       layout="total, sizes, prev, pager, next, jumper"
       :total="total"
     ></el-pagination>
+    <!-- 分配对话框 -->
+    <el-dialog title="分配角色" :visible.sync="assignVisible" width="40%">
+      <el-form :model="assignForm" label-width="80px">
+        <el-form-item label="用户名">
+          <el-tag type="info">{{ assignForm.usersName }}</el-tag>
+        </el-form-item>
+        <el-form-item label="角色列表">
+          <!-- select框的value值, 就是选中的option的value值, 用于提交的 -->
+          <el-select v-model="assignForm.rid" placeholder="请选择">
+            <el-option
+              v-for="item in options"
+              :key="item.id"
+              :label="item.roleName"
+              :value="item.id"
+            ></el-option>
+          </el-select>
+        </el-form-item>
+      </el-form>
+<!-- @click="assignRole" -->
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="assignVisible = false">取 消</el-button>
+        <el-button @click="allotVisible" type="primary">分 配</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 
@@ -63,7 +87,14 @@ export default {
       pagenum: 1,
       pagesize: 2,
       userList: [],
-      total: 0
+      total: 0,
+      assignVisible: false,
+      assignForm: {
+        usersName: '',
+        rid: '',
+        id: ''
+      },
+      options: []
     }
   },
   methods: {
@@ -112,6 +143,49 @@ export default {
         }
       } catch (e) {
         console.log(e)
+      }
+    },
+    async assignRoles (row) {
+      // console.log(row)
+      this.assignVisible = true
+      this.assignForm.usersName = row.username
+      this.assignForm.id = row.id
+      const usersId = await this.$axios.get(`users/${row.id}`)
+      // console.log(usersId)
+      if (usersId.meta.status === 200) {
+        const rid = usersId.data.rid
+        // console.log(rid)
+
+        // this.assignForm.rid = rid === -1 ? '' : rid
+        this.assignForm.rid = rid === -1 ? '' : rid
+      } else {
+        this.$message.error(usersId.meta.msg)
+      }
+
+      // 获取角色列表
+      const { meta, data } = await this.$axios.get('roles')
+      // console.log(res)
+      if (meta.status === 200) {
+        this.options = data
+      } else {
+        this.$message.success(meta.msg)
+      }
+    },
+    async allotVisible () {
+      const { id, rid } = this.assignForm
+      if (rid === '') {
+        this.$message.error('请选择角色')
+        return
+      }
+      const { meta } = await this.$axios.put(`users/${id}/role`, { rid })
+      // console.log(res)
+      if (meta.status === 200) {
+        this.assignVisible = false
+        this.getUserList()
+        this.$message.success(meta.msg)
+      } else {
+        this.$message.error(meta.msg)
+        console.log(meta)
       }
     }
   }
