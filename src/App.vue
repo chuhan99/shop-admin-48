@@ -14,5 +14,13 @@ html, body, #app {
   width: 100%;
   height: 100%;
 }
+#app{
+   .el-breadcrumb {
+    margin-bottom: 8px ;
+    padding: 8px 0;
+    border-bottom: 1px solid #c5c5c5;
+    // font-size: 15px;
+  }
+}
 
 </style>
